@@ -1,0 +1,13 @@
+name: RustBuildSystem
+version: '${project.version}'
+main: com.sanqiu.rustbuildsystem.RustBuildSystem
+api-version: '1.16'
+author: sanqiu
+
+commands:
+  rustbuild:  #指令名
+    description: "This is rust build system plugin" #指令的注解
+    usage: /rustbuild #指令的用法 当onCommand()方法返回false时提示这里的内容
+    aliases: [rb] #指令的多种形式 意为可以用 d, de 来触发/demo这个指令
+    permission: "rustbuild.use" #指令所需要的权限
+    permission-message: "无权使用" #当输入者无上方权限时提示该信息
