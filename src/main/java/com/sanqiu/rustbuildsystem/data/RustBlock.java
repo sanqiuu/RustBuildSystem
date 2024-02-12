@@ -68,7 +68,7 @@ public abstract class RustBlock {
 
         return location.clone().add(0,-1,0);
     }
-    public abstract boolean canBuild(Location location, BlockFace blockFace);
+    public abstract boolean canBuild(Location location, BlockFace blockFace,BlockFace verticalFace);
 
-    public abstract List<RustBlockData> build(Location location, BlockFace blockFace);
+    public abstract List<RustBlockData> build(Location location, BlockFace blockFace,BlockFace verticalFace);
 }

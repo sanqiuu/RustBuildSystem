@@ -11,7 +11,7 @@ public class Stair extends RustBlock{
     Material contentMaterial = Material.OAK_PLANKS;
     Material outerMaterial = Material.OAK_LOG;
     @Override
-    public boolean canBuild(Location location, BlockFace blockFace) {
+    public boolean canBuild(Location location, BlockFace blockFace,BlockFace verticalFace) {
         Location start_loc = getLeftLocatuon(getLeftLocatuon(location,blockFace),blockFace);
         for(int i =0 ;i<5;i++){
             Location loc_1 = start_loc;
@@ -30,7 +30,7 @@ public class Stair extends RustBlock{
     }
 
     @Override
-    public List<RustBlockData> build(Location location, BlockFace blockFace) {
+    public List<RustBlockData> build(Location location, BlockFace blockFace,BlockFace verticalFace) {
         List<RustBlockData> list = new ArrayList<>();
 
 
@@ -44,7 +44,7 @@ public class Stair extends RustBlock{
                     if((i==1 && j==1 && k==0) ||
                             (i==1 && j==2 && k==1)  ||
                             (i==1 && j==3 && k==2)){
-                        list.add(new RustBlockData(start_loc,Material.OAK_STAIRS));
+                        list.add(new RustBlockData(start_loc,contentMaterial));
                     }
                     else if(((i>=2 &&i<=3) && (j>=1&&j<=3)&& k==3)){
                         list.add(new RustBlockData(start_loc,contentMaterial));

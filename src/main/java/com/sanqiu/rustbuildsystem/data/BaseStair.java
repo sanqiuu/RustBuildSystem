@@ -11,7 +11,7 @@ public class BaseStair extends RustBlock{
     Material contentMaterial = Material.OAK_PLANKS;
     Material outerMaterial = Material.OAK_LOG;
     @Override
-    public boolean canBuild(Location location, BlockFace blockFace) {
+    public boolean canBuild(Location location, BlockFace blockFace,BlockFace verticalFace) {
 
         Location start_loc = getLeftLocatuon(getLeftLocatuon(location,blockFace),blockFace);
         boolean topInterface = true;
@@ -48,7 +48,7 @@ public class BaseStair extends RustBlock{
                 location.add(0,-1,0).getBlock().getType() != Material.AIR) && topInterface ;
     }
     @Override
-    public List<RustBlockData> build(Location location , BlockFace blockFace){
+    public List<RustBlockData> build(Location location , BlockFace blockFace,BlockFace verticalFace){
         List<RustBlockData> list = new ArrayList<>();
 
 

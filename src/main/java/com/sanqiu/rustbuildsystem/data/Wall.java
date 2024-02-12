@@ -13,47 +13,50 @@ public class Wall extends RustBlock {
     Material contentMaterial = Material.OAK_PLANKS;
     Material outerMaterial = Material.OAK_LOG;
     @Override
-    public boolean canBuild(Location location, BlockFace blockFace) {
+    public boolean canBuild(Location location, BlockFace blockFace,BlockFace verticalFace) {
 
-        Location leftBlockLoc = getLeftLocatuon(location,blockFace).add(0,-1,0);
-        Location leftleftBlockLoc = getLeftLocatuon(leftBlockLoc,blockFace);
-        Location rightBlockLoc = getRightLocatuon(location,blockFace).add(0,-1,0);
-        Location rightrightBlockLoc = getRightLocatuon(rightBlockLoc,blockFace);
+        Location start_loc = getLeftLocatuon(getLeftLocatuon(location,blockFace),blockFace);
 
-        return leftBlockLoc.getBlock().getType() == outerMaterial &&
-                leftleftBlockLoc.getBlock().getType() == outerMaterial &&
-                rightBlockLoc.getBlock().getType() == outerMaterial &&
-                rightrightBlockLoc.getBlock().getType() == outerMaterial &&
-                location.add(0,-1,0).getBlock().getType() == outerMaterial;
+        for(int i= 0;i<3 ;i++){
+            Location loc = start_loc;
+            for(int j =0;j<5 ;j++){
+                if(i==0){
+                    if(getDownLocatuon(start_loc).getBlock().getType() != outerMaterial) return false;
+                }
+                if(j!=0&&j!=4){
+                    if(start_loc.getBlock().getType() != Material.AIR) return false;
+                }
+                start_loc = getRightLocatuon(start_loc,blockFace);
+            }
+            start_loc = loc;
+            start_loc = getUpLocatuon(start_loc);
+
+        }
+
+        return true;
     }
     @Override
-    public List<RustBlockData> build(Location location , BlockFace blockFace){
+    public List<RustBlockData> build(Location location , BlockFace blockFace,BlockFace verticalFace){
 
         List<RustBlockData> list = new ArrayList<>();
-        list.add(new RustBlockData(location,contentMaterial));
-        list.add(new RustBlockData(location.clone().add(0,1,0),contentMaterial));
-        list.add(new RustBlockData(location.clone().add(0,2,0),contentMaterial));
 
+        Location start_loc = getLeftLocatuon(getLeftLocatuon(location,blockFace),blockFace);
 
-        Location leftBlockLoc = getLeftLocatuon(location,blockFace);
-        list.add(new RustBlockData(leftBlockLoc,contentMaterial));
-        list.add(new RustBlockData(leftBlockLoc.clone().add(0,1,0),contentMaterial));
-        list.add(new RustBlockData(leftBlockLoc.clone().add(0,2,0),contentMaterial));
+        for(int i= 0;i<3 ;i++){
+            Location loc = start_loc;
+            for(int j =0;j<5 ;j++){
+                if(j==0 || j==4){
+                    list.add(new RustBlockData(start_loc,outerMaterial));
+                }else {
+                    list.add(new RustBlockData(start_loc,contentMaterial));
+                }
+                start_loc = getRightLocatuon(start_loc,blockFace);
+            }
+            start_loc = loc;
+            start_loc = getUpLocatuon(start_loc);
 
-        Location leftleftBlockLoc = getLeftLocatuon(leftBlockLoc,blockFace);
-        list.add(new RustBlockData(leftleftBlockLoc,outerMaterial));
-        list.add(new RustBlockData(leftleftBlockLoc.clone().add(0,1,0),outerMaterial));
-        list.add(new RustBlockData(leftleftBlockLoc.clone().add(0,2,0),outerMaterial));
+        }
 
-        Location rightBlockLoc = getRightLocatuon(location,blockFace);
-        list.add(new RustBlockData(rightBlockLoc,contentMaterial));
-        list.add(new RustBlockData(rightBlockLoc.clone().add(0,1,0),contentMaterial));
-        list.add(new RustBlockData(rightBlockLoc.clone().add(0,2,0),contentMaterial));
-
-        Location rightrightBlockLoc = getRightLocatuon(rightBlockLoc,blockFace);
-        list.add(new RustBlockData(rightrightBlockLoc,outerMaterial));
-        list.add(new RustBlockData(rightrightBlockLoc.clone().add(0,1,0),outerMaterial));
-        list.add(new RustBlockData(rightrightBlockLoc.clone().add(0,2,0),outerMaterial));
         return list;
     }
 }

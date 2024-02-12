@@ -11,7 +11,7 @@ public class Door extends RustBlock{
     Material contentMaterial = Material.OAK_PLANKS;
     Material outerMaterial = Material.OAK_LOG;
     @Override
-    public boolean canBuild(Location location, BlockFace blockFace) {
+    public boolean canBuild(Location location, BlockFace blockFace,BlockFace verticalFace) {
         Location leftBlockLoc = getLeftLocatuon(location,blockFace).add(0,-1,0);
         Location leftleftBlockLoc = getLeftLocatuon(leftBlockLoc,blockFace);
         Location rightBlockLoc = getRightLocatuon(location,blockFace).add(0,-1,0);
@@ -24,7 +24,7 @@ public class Door extends RustBlock{
     }
 
     @Override
-    public List<RustBlockData> build(Location location, BlockFace blockFace) {
+    public List<RustBlockData> build(Location location, BlockFace blockFace,BlockFace verticalFace) {
 
         List<RustBlockData> list = new ArrayList<>();
         list.add(new RustBlockData(location.clone().add(0,2,0),contentMaterial));

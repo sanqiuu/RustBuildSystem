@@ -6,6 +6,7 @@ import com.sanqiu.rustbuildsystem.data.RustBlock;
 import com.sanqiu.rustbuildsystem.data.RustBlockData;
 import org.bukkit.*;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
@@ -115,9 +116,7 @@ public class RustPlayer {
         for (RustBlockData rustBlockData: BlockList){
             Block block = rustBlockData.location.getBlock();
             PersistentDataContainer data = new CustomBlockData(block,plugin);
-            if(!data.has(key,DataType.asList(DataType.LOCATION))){
-                data.set(key, DataType.asList(DataType.LOCATION),save_list);
-            }
+            data.set(key, DataType.asList(DataType.LOCATION),save_list);
             block.setType(rustBlockData.material);
         }
     }
@@ -138,7 +137,10 @@ public class RustPlayer {
         assert target_block != null;
         return target_block;
     }
-
+    private BlockFace getPlayerVerticalFacing(){
+        float pitch = player.getLocation().getPitch();
+        return pitch<0? BlockFace.UP:BlockFace.DOWN;
+    }
     public   void StartDraw(RustBlock rustBlock){
         player.sendMessage("开始绘制");
         player.setMetadata(TAG,new FixedMetadataValue(RustBuildSystem.getPlugin(),0));
@@ -153,8 +155,9 @@ public class RustPlayer {
                 }
 
                 Block target_block = getTargetBlock();
-                previousBlocksList = rustBlock.build(target_block.getLocation(),player.getFacing());
-                boolean canBuild = rustBlock.canBuild(target_block.getLocation(),player.getFacing());
+                BlockFace verticalFacing = getPlayerVerticalFacing();
+                previousBlocksList = rustBlock.build(target_block.getLocation(),player.getFacing(),verticalFacing);
+                boolean canBuild = rustBlock.canBuild(target_block.getLocation(),player.getFacing(),verticalFacing);
                 if(canBuild){
                     sendRustBlockChange(previousBlocksList,passBlockData);
                 }else{
