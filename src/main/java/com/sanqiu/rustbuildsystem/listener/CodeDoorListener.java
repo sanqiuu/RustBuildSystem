@@ -1,12 +1,14 @@
 package com.sanqiu.rustbuildsystem.listener;
 
 import com.sanqiu.rustbuildsystem.model.CodeDoor;
+import com.sanqiu.rustbuildsystem.model.RustPlayer;
 import org.bukkit.event.Listener;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -55,5 +57,16 @@ public class CodeDoorListener implements Listener {
         CodeDoor codeDoor = new CodeDoor(player,inv);
         codeDoor.closeCodeDoorInv();
     }
+    @EventHandler
+    public void onBlockBreak(BlockBreakEvent event) {
+        Block block = event.getBlock();
+        Player player = event.getPlayer();
+        if(!CodeDoor.isCodeLock(block)) return;
+        CodeDoor codeDoor = new CodeDoor(player,block);
+        if(!codeDoor.hasPermissionToBreak()){
+            event.setCancelled(true);
+            player.sendMessage("你不是密码锁的放置者");
+        }
 
+    }
 }

@@ -61,7 +61,7 @@ public class CodeDoor {
         RustBuildSystem plugin = RustBuildSystem.getPlugin();
         NamespacedKey key = new NamespacedKey(plugin,TAG);
         NamespacedKey key_uuid = new NamespacedKey(plugin,TAG_UUID);
-        PersistentDataContainer data = new CustomBlockData(block,plugin);
+        PersistentDataContainer data = new CustomBlockData(this.block,plugin);
         PersistentDataContainer player_data = player.getPersistentDataContainer();
         codeList = data.get(key,DataType.asList(DataType.INTEGER));
         uuidList = data.get(key_uuid,DataType.asList(DataType.UUID));
@@ -72,12 +72,21 @@ public class CodeDoor {
         CodeDoorHolder holder = (CodeDoorHolder) inventory.getHolder();
         assert holder != null;
         Block block = holder.block;
+
+
+
         this.player = player;
         this.block = block;
+        if(block.getBlockData() instanceof Bisected ){
+            Bisected bisected = (Bisected) block.getBlockData();
+            if(bisected.getHalf() == Bisected.Half.TOP){
+                this.block = block.getRelative(BlockFace.DOWN);
+            }
+        }
         RustBuildSystem plugin = RustBuildSystem.getPlugin();
         NamespacedKey key = new NamespacedKey(plugin,TAG);
         NamespacedKey key_uuid = new NamespacedKey(plugin,TAG_UUID);
-        PersistentDataContainer data = new CustomBlockData(block,plugin);
+        PersistentDataContainer data = new CustomBlockData(this.block,plugin);
         PersistentDataContainer player_data = player.getPersistentDataContainer();
         codeList = data.get(key,DataType.asList(DataType.INTEGER));
         uuidList = data.get(key_uuid,DataType.asList(DataType.UUID));
@@ -176,6 +185,9 @@ public class CodeDoor {
             PersistentDataContainer data = player.getPersistentDataContainer();
             data.remove(key);
         }
+    }
+    public boolean hasPermissionToBreak(){
+        return uuidList!=null && uuidList.get(0).equals(player.getUniqueId());
     }
     public  void operateCodeDoorInv(int slot){
         RustBuildSystem plugin = RustBuildSystem.getPlugin();

@@ -14,26 +14,31 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
-
-class FactionBlockHolder implements InventoryHolder {
-
-    Block block;
-    public FactionBlockHolder(Block block){
-        this.block  = block;
+class FactionBlockInvHolder implements InventoryHolder {
+    public Location location;
+    public FactionBlockInvHolder(Location location) {
+        this.location = location;
     }
+
     @Override
     public Inventory getInventory() {
         return null;
     }
 }
-
 public class FactionBlock {
     private static  int size = 54;
     private static String TAG = "FactionBlock";
-    private static ItemStack showPlayerInfo(OfflinePlayer offlinePlayer,Block block){
+    private Location location;
+    public FactionBlock(Location location){
+        this.location = location;
+    }
+    public FactionBlock(Inventory inventory){
+        FactionBlockInvHolder holder =  (FactionBlockInvHolder)inventory.getHolder();
+        this.location = holder.location;
+    }
+    private  ItemStack showPlayerInfo(OfflinePlayer offlinePlayer){
         ItemStack itemStack = new ItemStack(Material.PLAYER_HEAD);
         ItemMeta itemMeta = itemStack.getItemMeta();
         assert itemMeta != null;
@@ -48,7 +53,7 @@ public class FactionBlock {
         }else {
             lores.add(ChatColor.RED+"offline");
         }
-        boolean hasPermission = hasPermission(block,offlinePlayer.getUniqueId());
+        boolean hasPermission = hasPermission(offlinePlayer.getUniqueId());
         if(hasPermission){
             lores.add(ChatColor.GREEN+"有权限");
         }else {
@@ -59,7 +64,8 @@ public class FactionBlock {
         itemStack.setItemMeta(itemMeta);
         return itemStack;
     }
-    private  static void changePermission(Block block,UUID uuid){
+    private   void changePermission(UUID uuid){
+        Block block = location.getBlock();
         RustBuildSystem plugin = RustBuildSystem.getPlugin();
         NamespacedKey key = new NamespacedKey(plugin,TAG);
         PersistentDataContainer data = new CustomBlockData(block,plugin);
@@ -76,34 +82,39 @@ public class FactionBlock {
         }
         data.set(key,DataType.asList(DataType.UUID),list);
     }
-    private  static boolean hasPermission(Block block,UUID uuid){
+    public   boolean hasPermission(UUID uuid){
+        Block block = location.getBlock();
         RustBuildSystem plugin = RustBuildSystem.getPlugin();
         NamespacedKey key = new NamespacedKey(plugin,TAG);
         PersistentDataContainer data = new CustomBlockData(block,plugin);
         List<UUID> list = data.get(key, DataType.asList(DataType.UUID));
+        //Bukkit.getLogger().info(String.valueOf(list!=null && list.contains(uuid)));
+        //Bukkit.getLogger().info(uuid.toString());
+        //Bukkit.getLogger().info(location.toString());
         return list!=null && list.contains(uuid);
     }
 
-    public  static void OperateFactionBlockGUI(InventoryClickEvent event)
+    public   void OperateFactionBlockGUI(InventoryClickEvent event)
     {
         Inventory inventory = event.getInventory();
         int slot = event.getRawSlot();
-        if(slot<=0||slot>=inventory.getSize()) return;
+        if(slot<0||slot>=inventory.getSize()) return;
+
         ItemStack item = inventory.getItem(slot);
         if(item == null) return;
         UUID uuid = UUID.fromString(item.getItemMeta().getLore().get(0));
-        FactionBlockHolder holder = (FactionBlockHolder)inventory.getHolder();
-        changePermission(holder.block,uuid);
-        ItemStack new_item = showPlayerInfo(Bukkit.getOfflinePlayer(uuid), holder.block);
+        changePermission(uuid);
+        ItemStack new_item = showPlayerInfo(Bukkit.getOfflinePlayer(uuid));
         item.setItemMeta(new_item.getItemMeta());
     }
-    public  static void OpenFactionBlockGUI(Player player,Block block)
+    public   void OpenFactionBlockGUI(Player player)
     {
-        Inventory inventory = Bukkit.createInventory(new FactionBlockHolder(block),size,"领地柜");
+        Block block = location.getBlock();
+        Inventory inventory = Bukkit.createInventory(new FactionBlockInvHolder(block.getLocation()),size,"领地柜");
         OfflinePlayer[] offs = Bukkit.getOfflinePlayers();
         for(int index = 0;index<size;index++){
             if(index<offs.length){
-                ItemStack itemStack = showPlayerInfo(offs[index],block);
+                ItemStack itemStack = showPlayerInfo(offs[index]);
                 inventory.addItem(itemStack);
             }
         }
@@ -115,25 +126,8 @@ public class FactionBlock {
     }
     public static boolean isFactionBlock(Inventory inventory)
     {
-        return  inventory.getHolder() instanceof FactionBlockHolder;
+        return  inventory.getHolder() instanceof FactionBlockInvHolder;
     }
-    public static void placeFactionBlock(Player player ,Block block){
-        RustBuildSystem plugin = RustBuildSystem.getPlugin();
-        NamespacedKey key = new NamespacedKey(plugin,TAG);
-        PersistentDataContainer data = player.getPersistentDataContainer();
-        List<Location> list = data.get(key, DataType.asList(DataType.LOCATION));
-        if(list == null){
-            list = new ArrayList<>();
-        }
-        list.add(block.getLocation());
-        data.set(key,DataType.asList(DataType.LOCATION),list);
 
-    }
-    public static void breakFactionBlock(Block block){
 
-    }
-    public static boolean hasPermission(Player player ){
-        UUID uuid = player.getUniqueId();
-        return true;
-    }
 }

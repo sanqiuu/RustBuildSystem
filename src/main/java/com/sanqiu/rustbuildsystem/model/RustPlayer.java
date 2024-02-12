@@ -4,11 +4,14 @@ import com.jeff_media.morepersistentdatatypes.DataType;
 import com.sanqiu.rustbuildsystem.RustBuildSystem;
 import com.sanqiu.rustbuildsystem.data.RustBlock;
 import com.sanqiu.rustbuildsystem.data.RustBlockData;
+import com.sanqiu.rustbuildsystem.util.ItemUtil;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.BlockData;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -50,10 +53,6 @@ public class RustPlayer {
         NamespacedKey key = new NamespacedKey(plugin,TAG);
         PersistentDataContainer data = new CustomBlockData(block,plugin);
         return data.has(key,DataType.asList(DataType.LOCATION));
-    }
-    public  boolean checkBlockisBuilding(){
-        Block block = getTargetBlock();
-        return checkBlockisBuilding(block);
     }
     public void upgradeBuilding(Block block){
         RustBuildSystem plugin = RustBuildSystem.getPlugin();
@@ -105,6 +104,36 @@ public class RustPlayer {
             data.remove(key);
         }
     }
+    public boolean destoryBuilding(List<Block> block_list){
+        List<List<Location>> building_list = new ArrayList<>();
+        RustBuildSystem plugin = RustBuildSystem.getPlugin();
+        NamespacedKey key = new NamespacedKey(plugin,TAG);
+        for(Block block: block_list){
+            PersistentDataContainer data = new CustomBlockData(block,plugin);
+            List<Location> list = data.get(key,DataType.asList(DataType.LOCATION));
+            if(list == null) continue;
+            if(!building_list.contains(list)) building_list.add(list);
+        }
+        if(building_list.isEmpty()){
+            return false;
+        }
+        for(List<Location> list:building_list){
+            for(Location location: list){
+                Block b = location.getBlock();
+                Material material = b.getType();
+                Material changeMaterial = changeBlockType(material,false);
+                if(changeMaterial!=null){
+                    if(changeMaterial == Material.AIR){
+                        breakBuilding(b);
+                        break;
+                    }else if(changeMaterial!=material){
+                        location.getBlock().setType(changeMaterial);
+                    }
+                }
+            }
+        }
+        return true;
+    }
     private void build(List<RustBlockData> BlockList){
         RustBuildSystem plugin = RustBuildSystem.getPlugin();
         NamespacedKey key = new NamespacedKey(plugin,TAG);
@@ -141,8 +170,20 @@ public class RustPlayer {
         float pitch = player.getLocation().getPitch();
         return pitch<0? BlockFace.UP:BlockFace.DOWN;
     }
+    private boolean isMaterialEnough(Player player){
+        boolean result = true;
+        ItemStack woods = new ItemStack(Material.OAK_LOG);
+        if(ItemUtil.isPlayerItemEnough(player,woods,5)){
+            ItemUtil.subPlayerItemAmount(player,woods,5);
+
+        }else {
+            player.sendMessage("材料不足");
+            result =false;
+        }
+        return result;
+    }
     public   void StartDraw(RustBlock rustBlock){
-        player.sendMessage("开始绘制");
+        //player.sendMessage("开始绘制");
         player.setMetadata(TAG,new FixedMetadataValue(RustBuildSystem.getPlugin(),0));
         int drawTicks = 5;
         new BukkitRunnable(){
@@ -166,8 +207,10 @@ public class RustPlayer {
 
                 boolean hasTAG = player.hasMetadata(TAG);
                 if(hasTAG && player.getMetadata(TAG).get(0).asInt() == 1){
-                    if(canBuild) {
-                        player.sendMessage("停止绘制");
+
+
+                    if(canBuild && isMaterialEnough(player)) {
+                        //player.sendMessage("停止绘制");
                         build(previousBlocksList);
                         drawClear();
                         Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(RustBuildSystem.getPlugin(), () -> {
@@ -178,7 +221,7 @@ public class RustPlayer {
                         player.setMetadata(TAG,new FixedMetadataValue(RustBuildSystem.getPlugin(),0));
                     }
                 }else if(!hasTAG){
-                    player.sendMessage("停止绘制");
+                    //player.sendMessage("停止绘制");
                     drawClear();
                     Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(RustBuildSystem.getPlugin(), () -> {
                         sendRustBlockChange(previousBlocksList);
@@ -191,7 +234,8 @@ public class RustPlayer {
 
     }
     public void StartBuild(){
-        player.sendMessage("开始构建");
+        //player.sendMessage("开始构建");
         player.setMetadata(TAG,new FixedMetadataValue(RustBuildSystem.getPlugin(),1));
+
     }
 }

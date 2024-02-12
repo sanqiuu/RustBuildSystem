@@ -2,6 +2,7 @@ package com.sanqiu.rustbuildsystem.model;
 
 import com.sanqiu.rustbuildsystem.RustBuildSystem;
 import com.sanqiu.rustbuildsystem.data.*;
+import com.sanqiu.rustbuildsystem.util.ItemUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -12,6 +13,9 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 class BuildGUIHolder implements InventoryHolder{
 
@@ -43,7 +47,16 @@ public class BuildGUI {
     public static boolean isBuildingMap(Inventory inventory){
        return  inventory.getHolder() instanceof BuildGUIHolder;
     }
-
+    private static ItemStack  setItem(Material material,String name){
+        ItemStack itemStack = new ItemStack(material);
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        itemMeta.setDisplayName(name);
+        List<String> list = new ArrayList<>();
+        list.add("木头X5");
+        itemMeta.setLore(list);
+        itemStack.setItemMeta(itemMeta);
+        return itemStack;
+    }
     public static void OpenBuildInventory(Player player)
     {
         Inventory inventory = Bukkit.createInventory(new BuildGUIHolder(),45,"建造图纸");
@@ -52,38 +65,14 @@ public class BuildGUI {
         //  20        24
         //  29        33
         //       40
-        ItemStack itemStack1 = new ItemStack(Material.OAK_STAIRS);
-        ItemMeta itemMeta1 = itemStack1.getItemMeta();
-        itemMeta1.setDisplayName("地基楼梯");
-        itemStack1.setItemMeta(itemMeta1);
-        ItemStack itemStack2 = new ItemStack(Material.BRICK_WALL);
-        ItemMeta itemMeta2 = itemStack2.getItemMeta();
-        itemMeta2.setDisplayName("墙");
-        itemStack2.setItemMeta(itemMeta2);
-        ItemStack itemStack3 = new ItemStack(Material.OAK_PLANKS);
-        ItemMeta itemMeta3 = itemStack3.getItemMeta();
-        itemMeta3.setDisplayName("地基");
-        itemStack3.setItemMeta(itemMeta3);
-        ItemStack itemStack4 = new ItemStack(Material.OAK_PRESSURE_PLATE);
-        ItemMeta itemMeta4 = itemStack4.getItemMeta();
-        itemMeta4.setDisplayName("地板");
-        itemStack4.setItemMeta(itemMeta4);
-        ItemStack itemStack5 = new ItemStack(Material.OAK_FENCE);
-        ItemMeta itemMeta5 = itemStack5.getItemMeta();
-        itemMeta5.setDisplayName("旋转楼梯");
-        itemStack5.setItemMeta(itemMeta5);
-        ItemStack itemStack6 = new ItemStack(Material.GLASS_PANE);
-        ItemMeta itemMeta6 = itemStack6.getItemMeta();
-        itemMeta6.setDisplayName("窗户");
-        itemStack6.setItemMeta(itemMeta6);
-        ItemStack itemStack7 = new ItemStack(Material.OAK_DOOR);
-        ItemMeta itemMeta7 = itemStack7.getItemMeta();
-        itemMeta7.setDisplayName("门");
-        itemStack7.setItemMeta(itemMeta7);
-        ItemStack itemStack8 = new ItemStack(Material.OAK_SLAB);
-        ItemMeta itemMeta8 = itemStack7.getItemMeta();
-        itemMeta8.setDisplayName("半墙");
-        itemStack8.setItemMeta(itemMeta8);
+        ItemStack itemStack1 = setItem(Material.OAK_STAIRS,"地基楼梯");
+        ItemStack itemStack2 = setItem(Material.BRICK_WALL,"墙");
+        ItemStack itemStack3 = setItem(Material.OAK_PLANKS,"地基");
+        ItemStack itemStack4 = setItem(Material.OAK_PRESSURE_PLATE,"地板");
+        ItemStack itemStack5 = setItem(Material.OAK_FENCE,"旋转楼梯");
+        ItemStack itemStack6 = setItem(Material.GLASS_PANE,"窗户");
+        ItemStack itemStack7= setItem(Material.OAK_DOOR,"门");
+        ItemStack itemStack8 = setItem(Material.OAK_SLAB,"半墙");
         inventory.setItem(4,itemStack1);
         inventory.setItem(11,itemStack2);
         inventory.setItem(15,itemStack3);
@@ -113,8 +102,8 @@ public class BuildGUI {
         event.setCancelled(true);
         Player player = (Player) event.getWhoClicked();
         int index = event.getRawSlot();
-        player.sendMessage("点击了 index:"+index);
-
+        Inventory inventory = event.getInventory();
+        if(index>=inventory.getSize()) return;
         boolean needClose = true;
         switch (index)
         {
