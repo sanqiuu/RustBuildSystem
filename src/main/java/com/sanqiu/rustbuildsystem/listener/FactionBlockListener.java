@@ -58,7 +58,8 @@ public class FactionBlockListener implements Listener {
             Location location  = block.getLocation();
             if(FactionBlockManager.INSTANCE.isProtect(location)) {
                 player.sendMessage("附近已有领地柜");
-               return;
+                event.setCancelled(true);
+                return;
             }
             boolean success=FactionBlockManager.INSTANCE.placeFactionBlock(player,location);
             if(!success){

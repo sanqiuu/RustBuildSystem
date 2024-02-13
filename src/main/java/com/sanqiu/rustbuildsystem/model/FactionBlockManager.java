@@ -64,17 +64,14 @@ public class FactionBlockManager {
         list.remove(break_loc);
         save();
     }
-    static  int protect_area_size = 25;
     public  boolean hasPermission(Player player,Location location){
         Location hor_Location = new Location(location.getWorld(),location.getX(),0,location.getZ());
         for (FactionBlockHolder holder:faction_list){
             for(Location loc:holder.locationList){
                 Location hor_loc = new Location(loc.getWorld(),loc.getX(),0,loc.getZ());
-                if(hor_loc.distance(hor_Location)<=protect_area_size){
+                if(hor_loc.distance(hor_Location)<=55){
                     FactionBlock factionBlock = new FactionBlock(loc);
-                    if(!factionBlock.hasPermission(player.getUniqueId())){
-                        return false;
-                    }
+                    return factionBlock.hasPermission(player.getUniqueId());
                 }
             }
         }
@@ -85,7 +82,7 @@ public class FactionBlockManager {
         for (FactionBlockHolder holder:faction_list){
             for(Location loc:holder.locationList){
                 Location hor_loc = new Location(loc.getWorld(),loc.getX(),0,loc.getZ());
-                if(hor_loc.distance(hor_Location)<=protect_area_size){
+                if(hor_loc.distance(hor_Location)<=25){
                     return true;
                 }
             }

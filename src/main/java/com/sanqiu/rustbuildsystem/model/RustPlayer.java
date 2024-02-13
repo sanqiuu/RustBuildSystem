@@ -14,6 +14,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import com.jeff_media.customblockdata.CustomBlockData;
@@ -182,6 +183,13 @@ public class RustPlayer {
         }
         return result;
     }
+    private  boolean hasPermissionToPlace(Player player,Location location){
+        boolean result = FactionBlockManager.INSTANCE.hasPermission(player,location);
+        if(!result){
+            player.sendMessage("无权限");
+        }
+        return result;
+    }
     public   void StartDraw(RustBlock rustBlock){
         //player.sendMessage("开始绘制");
         player.setMetadata(TAG,new FixedMetadataValue(RustBuildSystem.getPlugin(),0));
@@ -197,8 +205,9 @@ public class RustPlayer {
 
                 Block target_block = getTargetBlock();
                 BlockFace verticalFacing = getPlayerVerticalFacing();
-                previousBlocksList = rustBlock.build(target_block.getLocation(),player.getFacing(),verticalFacing);
-                boolean canBuild = rustBlock.canBuild(target_block.getLocation(),player.getFacing(),verticalFacing);
+                Location location = target_block.getLocation();
+                previousBlocksList = rustBlock.build(location,player.getFacing(),verticalFacing);
+                boolean canBuild = rustBlock.canBuild(location,player.getFacing(),verticalFacing);
                 if(canBuild){
                     sendRustBlockChange(previousBlocksList,passBlockData);
                 }else{
@@ -209,7 +218,7 @@ public class RustPlayer {
                 if(hasTAG && player.getMetadata(TAG).get(0).asInt() == 1){
 
 
-                    if(canBuild && isMaterialEnough(player)) {
+                    if(canBuild && hasPermissionToPlace(player,location)&&isMaterialEnough(player)) {
                         //player.sendMessage("停止绘制");
                         build(previousBlocksList);
                         drawClear();

@@ -57,6 +57,7 @@ public class BuildGUI {
         itemStack.setItemMeta(itemMeta);
         return itemStack;
     }
+
     public static void OpenBuildInventory(Player player)
     {
         Inventory inventory = Bukkit.createInventory(new BuildGUIHolder(),45,"建造图纸");

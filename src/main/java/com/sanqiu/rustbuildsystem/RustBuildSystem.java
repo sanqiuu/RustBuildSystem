@@ -6,7 +6,9 @@ import com.sanqiu.rustbuildsystem.command.MainCommand;
 import com.sanqiu.rustbuildsystem.listener.BuildingMapListener;
 import com.sanqiu.rustbuildsystem.listener.CodeDoorListener;
 import com.sanqiu.rustbuildsystem.listener.FactionBlockListener;
+import com.sanqiu.rustbuildsystem.listener.RecipeListener;
 import com.sanqiu.rustbuildsystem.model.FactionBlockManager;
+import com.sanqiu.rustbuildsystem.model.Recipe;
 import com.sanqiu.rustbuildsystem.runnable.FactionBlockChecker;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -19,9 +21,11 @@ public final class RustBuildSystem extends JavaPlugin {
         FactionBlockManager.INSTANCE.load();
         getServer().getPluginCommand("rustbuild").setExecutor(new MainCommand());
         CustomBlockData.registerListener(this);
+        Recipe.RegisterRustRecipe();
         getServer().getPluginManager().registerEvents(new BuildingMapListener(), this);
         getServer().getPluginManager().registerEvents(new CodeDoorListener(), this);
         getServer().getPluginManager().registerEvents(new FactionBlockListener(), this);
+        getServer().getPluginManager().registerEvents(new RecipeListener(), this);
         new FactionBlockChecker().runTaskTimer(this, 0,5*60*20);
     }
 
