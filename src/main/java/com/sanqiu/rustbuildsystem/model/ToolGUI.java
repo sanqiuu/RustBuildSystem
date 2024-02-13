@@ -56,6 +56,7 @@ public class ToolGUI {
             if(index == upgrade_slot){
                 if(isMaterialEnough(player)){
                     rustPlayer.upgradeBuilding(block);
+                    event.getWhoClicked().closeInventory();
                 }
             }else {
                 if(FactionBlockManager.INSTANCE.hasPermission(player,block.getLocation())){
