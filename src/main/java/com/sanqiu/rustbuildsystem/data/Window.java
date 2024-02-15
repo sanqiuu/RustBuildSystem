@@ -21,7 +21,7 @@ public class Window extends RustBlock{
                 leftleftBlockLoc.getBlock().getType() == outerMaterial &&
                 rightBlockLoc.getBlock().getType() == outerMaterial &&
                 rightrightBlockLoc.getBlock().getType() == outerMaterial &&
-                location.add(0,-1,0).getBlock().getType() == outerMaterial;
+                location.getBlock().getType() == outerMaterial;
     }
 
     @Override

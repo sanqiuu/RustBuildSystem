@@ -24,7 +24,7 @@ public class Wall extends RustBlock {
                     if(getDownLocatuon(start_loc).getBlock().getType() != outerMaterial) return false;
                 }
                 if(j!=0&&j!=4){
-                    if(start_loc.getBlock().getType() != Material.AIR) return false;
+                    //if(start_loc.getBlock().getType() != Material.AIR) return false;
                 }
                 start_loc = getRightLocatuon(start_loc,blockFace);
             }
