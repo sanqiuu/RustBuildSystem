@@ -32,6 +32,8 @@ com\sanqiu\rustbuildsystem\RustBuildSystem.class
 com\sanqiu\rustbuildsystem\data\Wall.class
 com\sanqiu\rustbuildsystem\command\MainCommand.class
 com\sanqiu\rustbuildsystem\model\CodeDoor.class
+com\sanqiu\rustbuildsystem\data\Slope.class
+com\sanqiu\rustbuildsystem\data\Fence.class
 com\sanqiu\rustbuildsystem\data\Door.class
 com\sanqiu\rustbuildsystem\data\Stair.class
 com\sanqiu\rustbuildsystem\model\FactionBlock.class

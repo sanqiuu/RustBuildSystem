@@ -65,15 +65,17 @@ public class BuildGUI {
         //  11        15
         //  20        24
         //  29        33
-        //       40
+        //    39 40 41
         ItemStack itemStack1 = setItem(Material.OAK_STAIRS,"地基楼梯");
-        ItemStack itemStack2 = setItem(Material.BRICK_WALL,"墙");
-        ItemStack itemStack3 = setItem(Material.OAK_PLANKS,"地基");
+        ItemStack itemStack2 = setItem(Material.OAK_PLANKS,"墙");
+        ItemStack itemStack3 = setItem(Material.SCAFFOLDING,"地基");
         ItemStack itemStack4 = setItem(Material.OAK_PRESSURE_PLATE,"地板");
-        ItemStack itemStack5 = setItem(Material.OAK_FENCE,"旋转楼梯");
+        ItemStack itemStack5 = setItem(Material.OAK_STAIRS,"旋转楼梯");
         ItemStack itemStack6 = setItem(Material.GLASS_PANE,"窗户");
         ItemStack itemStack7= setItem(Material.OAK_DOOR,"门");
         ItemStack itemStack8 = setItem(Material.OAK_SLAB,"半墙");
+        ItemStack itemStack9 = setItem(Material.OAK_STAIRS,"斜坡");
+        ItemStack itemStack10 = setItem(Material.OAK_FENCE,"围栏");
         inventory.setItem(4,itemStack1);
         inventory.setItem(11,itemStack2);
         inventory.setItem(15,itemStack3);
@@ -82,6 +84,8 @@ public class BuildGUI {
         inventory.setItem(29,itemStack6);
         inventory.setItem(33,itemStack7);
         inventory.setItem(40,itemStack8);
+        inventory.setItem(39,itemStack9);
+        inventory.setItem(41,itemStack10);
         player.openInventory(inventory);
     }
     private static void SafeStartDraw(Player player,RustBlock rustBlock){
@@ -145,7 +149,15 @@ public class BuildGUI {
 
                 SafeStartDraw(player,new HalfWall());
                 break;
+            case 39:
+                //斜坡
 
+                SafeStartDraw(player,new Slope());
+                break;
+            case 41:
+                //围栏
+                SafeStartDraw(player,new Fence());
+                break;
             default:
                 needClose = false;
                 break;

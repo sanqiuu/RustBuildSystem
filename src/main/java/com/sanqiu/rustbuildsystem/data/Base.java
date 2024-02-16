@@ -24,7 +24,7 @@ public class Base extends RustBlock{
                     Location bottom = getDownLocatuon(start_loc);
                     do{
                         Material material = bottom.getBlock().getType();
-                        if(material == Material.AIR ||material == Material.GRASS){
+                        if(material == Material.AIR){
                             lay_num++;
                             bottom = getDownLocatuon(bottom);
                         }else {
@@ -33,9 +33,9 @@ public class Base extends RustBlock{
                     }while (true);
                 }
                 if(lay_num>=6){
-                    return false;
+                    //return false;
                 }
-                if(start_loc.getBlock().getType()!=Material.AIR){
+                if(start_loc.getBlock().getType()!=Material.AIR && start_loc.getBlock().getType()!=outerMaterial){
                     return false;
                 }
 

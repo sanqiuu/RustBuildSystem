@@ -20,8 +20,7 @@ public class HalfWall extends RustBlock {
         return leftBlockLoc.getBlock().getType() == outerMaterial &&
                 leftleftBlockLoc.getBlock().getType() == outerMaterial &&
                 rightBlockLoc.getBlock().getType() == outerMaterial &&
-                rightrightBlockLoc.getBlock().getType() == outerMaterial &&
-                location.add(0,-1,0).getBlock().getType() == outerMaterial;
+                rightrightBlockLoc.getBlock().getType() == outerMaterial ;
     }
     @Override
     public List<RustBlockData> build(Location location , BlockFace blockFace,BlockFace verticalFace){
