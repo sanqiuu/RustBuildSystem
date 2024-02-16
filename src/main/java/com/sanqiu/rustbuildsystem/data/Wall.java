@@ -20,7 +20,7 @@ public class Wall extends RustBlock {
         for(int i= 0;i<3 ;i++){
             Location loc = start_loc;
             for(int j =0;j<5 ;j++){
-                if(i==0){
+                if(i==0&&(j==0||j==4)){
                     if(getDownLocatuon(start_loc).getBlock().getType() != outerMaterial) return false;
                 }
                 if(j!=0&&j!=4){

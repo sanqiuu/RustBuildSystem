@@ -18,8 +18,6 @@ public class Door extends RustBlock{
         Location rightrightBlockLoc = getRightLocatuon(rightBlockLoc,blockFace);
 
         return leftBlockLoc.getBlock().getType() == outerMaterial &&
-                leftleftBlockLoc.getBlock().getType() == outerMaterial &&
-                rightBlockLoc.getBlock().getType() == outerMaterial &&
                 rightrightBlockLoc.getBlock().getType() == outerMaterial ;
     }
 
