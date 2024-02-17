@@ -96,7 +96,8 @@ public class CodeDoor {
 
     public static boolean isCodeLock(Block block)
     {
-        return block.getType().toString().contains("DOOR");
+        String string = block.getType().toString();
+        return string.contains("DOOR") ||string.contains("FENCE_GATE");
     }
     public static boolean isCodeLock(Inventory inventory)
     {

@@ -41,10 +41,10 @@ public class BaseStair extends RustBlock{
         Location rightBlockLoc = getRightLocatuon(location,blockFace).add(0,-1,0);
         Location rightrightBlockLoc = getRightLocatuon(rightBlockLoc,blockFace).add(0,-1,0);
 
-        return (leftBlockLoc.getBlock().getType() != Material.AIR &&
-                leftleftBlockLoc.getBlock().getType() != Material.AIR &&
-                rightBlockLoc.getBlock().getType()  != Material.AIR &&
-                rightrightBlockLoc.getBlock().getType() != Material.AIR ) && topInterface ;
+        return (leftBlockLoc.getBlock().getType().isSolid() &&
+                leftleftBlockLoc.getBlock().getType().isSolid() &&
+                rightBlockLoc.getBlock().getType().isSolid() &&
+                rightrightBlockLoc.getBlock().getType().isSolid() ) && topInterface ;
     }
     @Override
     public List<RustBlockData> build(Location location , BlockFace blockFace,BlockFace verticalFace){

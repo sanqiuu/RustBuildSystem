@@ -27,7 +27,7 @@ public class Fence extends RustBlock{
             }
             for(int j =0;j<length ;j++){
                 if(isFirstLay){
-                    if(start_loc.getBlock().getType()!=Material.AIR) return false;
+                    if(start_loc.getBlock().getType().isSolid()) return false;
                 }
 
                 start_loc = getRightLocatuon(start_loc,blockFace);
@@ -56,7 +56,7 @@ public class Fence extends RustBlock{
     private boolean isLineAir(Location location, BlockFace blockFace){
         Location loc = location.clone();
         for(int i = 0;i<length;i++){
-            if(loc.getBlock().getType()!=Material.AIR){
+            if(loc.getBlock().getType().isSolid()){
                 return false;
             }
             loc = getRightLocatuon(loc,blockFace);
